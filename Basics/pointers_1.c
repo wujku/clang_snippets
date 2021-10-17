@@ -19,7 +19,11 @@ Little Endian           Big Endian
 */
 
 uint16_t tab1[] = { 8, 513, 734, 612,  87 };
+// uint16_t tab1[] = { 0x0008,  0x0201, 0x02DE, 0x0264, 0x0057 };
+// Little Endian RAM {  08 00,   01 02,  DE 02,  64 02,  57 00 };
+
 uint8_t  tab2[] = { 7,  99,   1,   2, 113 };
+// uint8_t tab2[] = { 0x7, 0x63, 0x01, 0x02, 0x71 };
 
 // Rzutowanie tablicy 2 bajtowej na wskaźnik 1 bajtowy
 uint8_t  * wsk1 = (uint8_t*)  tab1;
@@ -27,7 +31,8 @@ uint8_t  * wsk1 = (uint8_t*)  tab1;
 // Rzutowanie tablicy 1 bajtowej na wskaźnik 2 bajtowy
 uint16_t * wsk2 = (uint16_t*) tab2;
 
-// 2 bajty (0b00000001 = 1, 0x00000010 = 2)
+// 2 bajty                    (0x0201)
+// 2 bajty – Little Endian RAM (01 02)
 uint16_t z = 513;
 
 // Rzutowanie liczby 2 bajtowej na wskaźnik 1 bajtowy
@@ -35,13 +40,13 @@ uint16_t z = 513;
 uint8_t * zptr = (uint8_t*) &z;
 
 int main() {
-    // 1 i 2 bajt:   8 (0b00001000 = 8, 0x00000000 = 0) - zapisany za pomocą dwoch bajtow
-    // 3 i 4 bajt: 513 (0b00000001 = 1, 0x00000010 = 2) - zapisany za pomocą dwoch bajtow
-    wsk1 += 3; // przejście na drugi bajt liczby 513: {0b00000001, 0x00000010 <--}
+    // 1 i 2 bajt:   8 (0x0008) - zapis za pomocą dwoch bajtow
+    // 3 i 4 bajt: 513 (0x0201) - zapis za pomocą dwoch bajtow
+    wsk1 += 3; // przejście na drugi bajt liczby 513: Little Endian {01 02 <--}
     
-    // 2 pierwsze bajty: 7 i 99 (0b00000111, 0x01100011)
-    // 2 kolejne bajty:  1 i  2 (0b00000001, 0x00000010)
-    wsk2 += 1; // przejście na kolejną liczbę 2 bajtową: {1, 2}
+    // 2 pierwsze bajty: 7 i 99 (0x7,  0x63)
+    // 2 kolejne bajty:  1 i  2 (0x01, 0x02)
+    wsk2 += 1; // przejście na kolejną liczbę 2 bajtową: Little Endian {01 02}
 
     // Przypisujemy zawartość wskaźnika do zmiennej
     int a = *wsk1; //   2
